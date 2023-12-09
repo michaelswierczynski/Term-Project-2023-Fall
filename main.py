@@ -94,4 +94,4 @@ def main(season):
     print(json_output)
 
 if __name__ == "__main__":
-    main()
+    main('2023-2024')
