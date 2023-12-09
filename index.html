@@ -31,26 +31,17 @@
           background-color: orangered;
       }
 </style>
-  </head>
 
-  <body>
+</head>
+<body>
+
     <header>
-      <h1>Hello!</h1>
-      <h2>I am here to help you make the best bets for D1 NCAA Basketball.</h2>
-      <h3> USE </h3>
+        <h1>Hello!</h1>
+        <h2>I am here to help you make the best bets for D1 NCAA Basketball.</h2>
+        <h3>USE</h3>
     </header>
-    
-    <h1>Submit Button for Season</h1>
 
-    <!-- Button that redirects to another HTML file -->
-    <button onclick="redirectToAnotherPage()">Submit</button>
-
-    <script>
-        function redirectToAnotherPage() {
-            // Redirect to another HTML file
-            window.location.href = 'anotherPage.html';
-        }
-    </script>
+    <h2>Select Season:</h2>
 
     <label for="dropdown">Select an option:</label>
     <select id="dropdown" name="dropdown">
@@ -58,15 +49,22 @@
         <option value="2021-2022 Season">2021-2022 Season</option>
         <option value="2022-2023 Season">2022-2023 Season</option>
         <option value="2023-2024 Season">2023-2024 Season</option>
-      
     </select>
 
-    <!-- <form action="/index" method="post">
-      <label for="place">Enter a place:</label>
-      <input type="text" id="place" name="place" required>
+    <button onclick="redirectToSeasonPage()">Submit</button>
 
-      <button type="submit">Submit</button>
-    </form> -->
+    <script>
+        function redirectToSeasonPage() {
+            // Get the selected option value
+            var selectedSeason = document.getElementById('dropdown').value;
 
-  </body>
+            // Construct the URL based on the selected season
+            var url = 'season' + selectedSeason.replace(/\s/g, '') + '.html';
+
+            // Redirect to the constructed URL
+            window.location.href = url;
+        }
+    </script>
+
+</body>
 </html>
