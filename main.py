@@ -88,8 +88,10 @@ def main(season):
             bookmaker_value_index[bookmaker_key] += game_score
 
     # Sorted Bookmaker Value Index
-    for bookmaker_key, total_score in sorted(bookmaker_value_index.items(), key=lambda x: x[1], reverse=True):
-        print(f'{bookmaker_key}: {total_score:.2f}')
+    json_output = json.dumps(bookmaker_value_index, indent=2)
+    
+    # Output the JSON to the terminal
+    print(json_output)
 
 if __name__ == "__main__":
-    main('2023-2024')
+    main()
