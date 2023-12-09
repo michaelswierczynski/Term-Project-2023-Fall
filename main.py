@@ -1,3 +1,10 @@
+season_dates = {
+    '2020-2021': {'start': '11/04/2020', 'end': '04/04/2021'},
+    '2021-2022': {'start': '11/04/2021', 'end': '04/04/2022'},
+    '2022-2023': {'start': '11/04/2022', 'end': '04/04/2023'},
+    '2023-2024': {'start': '11/01/2023', 'end': '12/04/2023'},
+}
+
 import json
 from datetime import datetime
 
@@ -57,12 +64,13 @@ def compare_bookmakers(data):
 
     return bookmakers_data
 
-def main():
+def main(season):
     json_file_path = 'odds_data.json'
     loaded_data = load_json_file(json_file_path)
 
-    start_date_season = '11/04/2021'
-    end_date_season = '04/04/2022'
+    start_date_season = season_dates[season]['start']
+    end_date_season = season_dates[season]['end']
+
     season_data = filter_data_by_season(loaded_data, start_date_season, end_date_season)
 
     bookmakers_data = compare_bookmakers(season_data)
@@ -84,4 +92,4 @@ def main():
         print(f'{bookmaker_key}: {total_score:.2f}')
 
 if __name__ == "__main__":
-    main()
+    main('2023-2024')
