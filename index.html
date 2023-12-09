@@ -81,10 +81,10 @@
 
     <label for="dropdown">Select an option:</label>
     <select id="dropdown" name="dropdown">
-        <option value="2020-2021 Season">2020-2021 Season</option>
-        <option value="2021-2022 Season">2021-2022 Season</option>
-        <option value="2022-2023 Season">2022-2023 Season</option>
-        <option value="2023-2024 Season">2023-2024 Season</option>
+        <option value="2020-2021">2020-2021 Season</option>
+        <option value="2021-2022">2021-2022 Season</option>
+        <option value="2022-2023">2022-2023 Season</option>
+        <option value="2023-2024">2023-2024 Season</option>
     </select>
 
     <button onclick="runAnalysis()">Run Analysis</button>
@@ -95,27 +95,35 @@
   
     <script>
       function runAnalysis() {
-        var selectedSeason = document.getElementById('seasonDropdown').value;
+          var selectedSeason = document.getElementById('seasonDropdown').value;
   
-        // Construct the URL based on the selected season
-        var url = 'season' + selectedSeason.replace(/\s/g, '') + '.json';
+          // Construct the URL based on the selected season
+          var url = 'season' + selectedSeason.replace(/\s/g, '') + '.json';
   
-        // Fetch data from the Python script
-        fetch(url)
-          .then(response => response.json())
-          .then(data => {
-            // Display the data in the resultSection div
-            var resultSection = document.getElementById('resultSection');
-            resultSection.innerHTML = `<p>Bookmaker Value Index for ${selectedSeason}:</p>`;
-            
-            // Iterate through the data and display it
-            for (var bookmaker in data) {
-              resultSection.innerHTML += `<p>${bookmaker}: ${data[bookmaker].toFixed(2)}</p>`;
-            }
-          })
-          .catch(error => console.error('Error fetching data:', error));
+          // Fetch data from the Python script
+          fetch(url)
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  // Display the data in the resultSection div
+                  var resultSection = document.getElementById('resultSection');
+                  resultSection.innerHTML = `<p>Bookmaker Value Index for ${selectedSeason}:</p>`;
+  
+                  // Iterate through the data and display it
+                  for (var bookmaker in data) {
+                      resultSection.innerHTML += `<p>${bookmaker}: ${data[bookmaker].toFixed(2)}</p>`;
+                  }
+              })
+              .catch(error => {
+                  console.error('Error fetching data:', error);
+                  alert('Error fetching data. Please check the console for details.');
+              });
       }
-    </script>
+  </script>
   
   </body>
   </html>
