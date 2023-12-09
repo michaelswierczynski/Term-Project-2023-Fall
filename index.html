@@ -89,6 +89,13 @@
 
     <button onclick="redirectToSeasonPage()">Submit</button>
 
+    <section>
+      <h2>How did we determine bookmaker value?</h2>
+      <p>
+        Thanks to the Odds-API, we were able to access the point spreads of all college basketball games over the past three seasons and for the games so far this year. While between books most point spreads are pretty similar, the prices, or odds, of these spreads often vary. This is where value appears for the bettor. In order to capture this, we created an adjusted spread by doing the implied probability of the spread and the given price per book. We then compared all of these adjusted spreads by bookmaker by season in a value index to determine if, over an entire season, one sportsbook/bookmaker consistently offered more appealing lines to college bettors. Select a season above to see the results. The higher the value index, the more value these sportsbooks/bookmakers are offering to the bettor.
+      </p>
+    </section>
+
     <script>
         function redirectToSeasonPage() {
             // Get the selected option value
