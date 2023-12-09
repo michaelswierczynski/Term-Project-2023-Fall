@@ -43,7 +43,3 @@ The script uses the following season dates for filtering data:
 ## Results
 
 The script generates a value index for each bookmaker during the specified season and prints the results in descending order.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
