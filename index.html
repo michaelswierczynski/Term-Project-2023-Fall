@@ -96,11 +96,24 @@
     <script>
       function runAnalysis() {
         var selectedSeason = document.getElementById('seasonDropdown').value;
-        
-        // You can use the selectedSeason value to make AJAX requests, fetch data, and update the UI
-        // For simplicity, let's just print the selected season for now
-        var resultSection = document.getElementById('resultSection');
-        resultSection.innerHTML = `<p>Analysis for ${selectedSeason} is coming soon!</p>`;
+  
+        // Construct the URL based on the selected season
+        var url = 'season' + selectedSeason.replace(/\s/g, '') + '.json';
+  
+        // Fetch data from the Python script
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            // Display the data in the resultSection div
+            var resultSection = document.getElementById('resultSection');
+            resultSection.innerHTML = `<p>Bookmaker Value Index for ${selectedSeason}:</p>`;
+            
+            // Iterate through the data and display it
+            for (var bookmaker in data) {
+              resultSection.innerHTML += `<p>${bookmaker}: ${data[bookmaker].toFixed(2)}</p>`;
+            }
+          })
+          .catch(error => console.error('Error fetching data:', error));
       }
     </script>
   
