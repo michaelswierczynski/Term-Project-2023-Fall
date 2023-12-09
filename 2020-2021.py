@@ -1,9 +1,13 @@
 import json
 import pandas as pd
-import matplotlib.pyplot as plt
 
-# Step 1: Data Preparation
+
+
 def load_json_file(file_path):
+    """
+    Data was downloaded from Odds-api in extract file.
+    Function loads file to be analyzed
+    """
     with open(file_path, 'r') as json_file:
         data = json.load(json_file)
     return data
@@ -11,15 +15,24 @@ def load_json_file(file_path):
 json_file_path = 'odds_data.json'
 data = load_json_file(json_file_path)
 
-
 from datetime import datetime
 
 def filter_data_by_season(data, start_date, end_date):
-    # Convert start and end dates to datetime objects
+    """
+    Function seperates the data by season with start dates and end dates.
+    Season options include:
+    2020-2021
+    2021-2022
+    2022-2023
+    2023 (Current season, games up until 12/04/23)
+
+    """
     start_datetime = datetime.strptime(start_date, '%m/%d/%Y')
     end_datetime = datetime.strptime(end_date, '%m/%d/%Y')
 
-    # Filter data for the specified season
+    #Consulted ChatGPT for this part
+    #Was having trouble with the structure of the data dictionary and the key used for the date of games 
+    #Contains timestamps, commence time (game time), updated odds times
     seasonal_data = []
     for date_dict in data:
         for date_str, date_data in date_dict.items():
@@ -31,54 +44,28 @@ def filter_data_by_season(data, start_date, end_date):
 
     return seasonal_data
 
-# Example usage:
+
 json_file_path = 'odds_data.json'
 loaded_data = load_json_file(json_file_path)
 
-# Specify the date range for the season
 start_date_season = '11/16/2020'
 end_date_season = '04/06/2021'
 
-# Step 2: Seasonal Analysis
 season_data = filter_data_by_season(loaded_data, start_date_season, end_date_season)
 
-# Now, season_data contains the filtered data for the specified season
+#TEST
 # print(season_data[:2])  
 
-# def compare_bookmakers(season_data):
-#     bookmakers_data = {}  # Dictionary to store bookmakers' spread data for each game
-
-#     for game in season_data:
-#         game_id = game['id']
-#         bookmakers_data[game_id] = {'bookmakers': {}, 'spreads_favored': {}, 'spreads_underdog': {}}
-
-#         for bookmaker in game['bookmakers']:
-#             bookmaker_key = bookmaker['key']
-#             outcomes = bookmaker['markets'][0]['outcomes']
-
-#             # Check if there are outcomes for both favored and underdog teams
-#             if len(outcomes) == 2:
-#                 favored_team_outcome = next((outcome for outcome in outcomes if outcome['point'] < 0), None)
-#                 underdog_team_outcome = next((outcome for outcome in outcomes if outcome['point'] > 0), None)
-
-#                 if favored_team_outcome and underdog_team_outcome:
-#                     favored_spread = favored_team_outcome['point']
-#                     underdog_spread = underdog_team_outcome['point']
-
-#                     bookmakers_data[game_id]['bookmakers'][bookmaker_key] = bookmaker['title']
-#                     bookmakers_data[game_id]['spreads_favored'][bookmaker_key] = favored_spread
-#                     bookmakers_data[game_id]['spreads_underdog'][bookmaker_key] = underdog_spread
-
-#     return bookmakers_data
-
-# Example usage:
-# bookmakers_data = compare_bookmakers(season_data)
-
-# Now, bookmakers_data contains spread information for each bookmaker for each game
-# You can access the data using game IDs, bookmaker keys, and spread types
-# Example: bookmakers_data[game_id]['bookmakers'][bookmaker_key]
-
 def compare_bookmakers(data):
+    """
+    Function analyzes the spreads and their respective prices offerred by the different bookmakers within the data. 
+    A dictionary is created to store each bookmakers' odds and prices for every game of the season.
+    Considering most spreads will be very similar, the real value to the bettor is the prices of these spreads.
+    In order to capture this, the function creates an adjusted spread, based on the implied probability given the price.
+    Sportsbooks change prices based on a number of different assumptions, calculations, and demand for the given bet.
+    The higher the adjusted spread, the higher the value is for the bettor.
+    Main purpose is to see if one sportsbook/bookmaker consistently offers more value for bettors.
+    """
     bookmakers_data = {}
 
     for game in data:
@@ -88,7 +75,7 @@ def compare_bookmakers(data):
         for bookmaker in game['bookmakers']:
             outcomes = bookmaker['markets'][0]['outcomes']
 
-            # Check if there are two outcomes for spreads
+            # Spread can be 0, even price for both teams
             if len(outcomes) == 2:
                 favored_team_outcome = next((outcome for outcome in outcomes if outcome['point'] < 0), None)
                 underdog_team_outcome = next((outcome for outcome in outcomes if outcome['point'] > 0), None)
@@ -102,7 +89,7 @@ def compare_bookmakers(data):
                     bookmakers_data[game_id]['spreads_favored'][bookmaker_key] = favored_spread
                     bookmakers_data[game_id]['spreads_underdog'][bookmaker_key] = underdog_spread
 
-                    # Calculate and store adjusted spreads
+                    
                     favored_odds = favored_team_outcome['price']
                     underdog_odds = underdog_team_outcome['price']
 
@@ -120,20 +107,9 @@ def compare_bookmakers(data):
 
 bookmakers_data = compare_bookmakers(season_data)
 
-# # Print information for the first game as an example
-# first_game_id = season_data[0]['id']
 
-# print(f"Game ID: {first_game_id}")
-# print("Bookmakers:")
-# for bookmaker_key, bookmaker_title in bookmakers_data[first_game_id]['bookmakers'].items():
-#     print(f"  {bookmaker_title} (Key: {bookmaker_key})")
-#     print(f"    Favored Spread: {bookmakers_data[first_game_id]['spreads_favored'][bookmaker_key]}")
-#     print(f"    Underdog Spread: {bookmakers_data[first_game_id]['spreads_underdog'][bookmaker_key]}")
-#     print()
-
-
-# Assume season_bookmakers is the result of calling compare_bookmakers on your data
-# game_count = 0  # Counter for the number of games printed
+# TESTING
+# game_count = 0  
 
 # for game_id, game_data in bookmakers_data.items():
 #     print(f"Game ID: {game_id}")
@@ -156,10 +132,10 @@ bookmakers_data = compare_bookmakers(season_data)
 
 #     print("\n" + "=" * 50 + "\n")
 
-    # # Increment the game count
-    # game_count += 1
-    # if game_count >= 2:
-    #     break  # Stop printing after the first two games
+#     #2 games for testing
+#     game_count += 1
+#     if game_count >= 2:
+#         break  
 
 
 bookmaker_value_index = {}
@@ -169,18 +145,12 @@ for game_id, game_data in bookmakers_data.items():
         adjusted_spread_favored = game_data['adjusted_spreads_favored'][bookmaker_key]
         adjusted_spread_underdog = game_data['adjusted_spreads_underdog'][bookmaker_key]
 
-        # Calculate a score for each game based on the adjusted spreads
         game_score = abs(adjusted_spread_favored) + abs(adjusted_spread_underdog)
 
-        # Update the cumulative score for the bookmaker
         if bookmaker_key not in bookmaker_value_index:
             bookmaker_value_index[bookmaker_key] = 0
         bookmaker_value_index[bookmaker_key] += game_score
 
-# Display the Total Value Index for each bookmaker
+# Sorted Bookmaker Value Index
 for bookmaker_key, total_score in sorted(bookmaker_value_index.items(), key=lambda x: x[1], reverse=True):
-    print(f'{bookmaker_key}: {total_score}')
-
-
-
-
+    print(f'{bookmaker_key}: {total_score:.2f}')
