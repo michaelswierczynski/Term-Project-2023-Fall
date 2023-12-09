@@ -90,18 +90,17 @@
     <button onclick="redirectToSeasonPage()">Submit</button>
 
     <script>
-      function runScript() {
-          var selectedSeason = document.getElementById('dropdown').value;
+        function redirectToSeasonPage() {
+            // Get the selected option value
+            var selectedSeason = document.getElementById('dropdown').value;
 
-          var url = '/run_script?season=' + selectedSeason;
+            // Construct the URL based on the selected season
+            var url = 'season' + selectedSeason.replace(/\s/g, '') + '.html';
 
-          fetch(url, { method: 'POST' })
-          .then(response => response.text())
-          .then(data => {
-              console.log(data); // Display the result (you can update this as needed)
-          });
-      }
-  </script>
+            // Redirect to the constructed URL
+            window.location.href = url;
+        }
+    </script>
 
 </body>
 </html>
