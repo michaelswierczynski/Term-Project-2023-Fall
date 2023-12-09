@@ -87,20 +87,22 @@
         <option value="2023-2024 Season">2023-2024 Season</option>
     </select>
 
-    <button onclick="redirectToSeasonPage()">Submit</button>
+    <button onclick="runAnalysis()">Run Analysis</button>
 
+    <div id="resultSection">
+      <!-- Results will be displayed here -->
+    </div>
+  
     <script>
-        function redirectToSeasonPage() {
-            // Get the selected option value
-            var selectedSeason = document.getElementById('dropdown').value;
-
-            // Construct the URL based on the selected season
-            var url = 'season' + selectedSeason.replace(/\s/g, '') + '.html';
-
-            // Redirect to the constructed URL
-            window.location.href = url;
-        }
+      function runAnalysis() {
+        var selectedSeason = document.getElementById('seasonDropdown').value;
+        
+        // You can use the selectedSeason value to make AJAX requests, fetch data, and update the UI
+        // For simplicity, let's just print the selected season for now
+        var resultSection = document.getElementById('resultSection');
+        resultSection.innerHTML = `<p>Analysis for ${selectedSeason} is coming soon!</p>`;
+      }
     </script>
-
-</body>
-</html>
+  
+  </body>
+  </html>
