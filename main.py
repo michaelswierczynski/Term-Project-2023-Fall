@@ -87,11 +87,12 @@ def main(season):
                 bookmaker_value_index[bookmaker_key] = 0
             bookmaker_value_index[bookmaker_key] += game_score
 
-    # Sorted Bookmaker Value Index
-    json_output = json.dumps(bookmaker_value_index, indent=2)
-    
-    # Output the JSON to the terminal
-    print(json_output)
+    sorted_bookmaker_value_index = {k: v for k, v in sorted(bookmaker_value_index.items(), key=lambda x: x[1], reverse=True)}
 
+    output_json_file = f'season{season.replace("-", "")}.json'
+    with open(output_json_file, 'w') as json_file:
+        json.dump(sorted_bookmaker_value_index, json_file)
+
+        
 if __name__ == "__main__":
     main('2023-2024')
